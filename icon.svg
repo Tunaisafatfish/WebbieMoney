@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Finance Manager Icon">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#dfeee4"/>
+      <stop offset="100%" stop-color="#a9bfc3"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" x2="1">
+      <stop offset="0%" stop-color="#7da597"/>
+      <stop offset="100%" stop-color="#6b7ca8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="110" fill="url(#bg)"/>
+  <circle cx="176" cy="176" r="94" fill="#f9f6f2" opacity="0.95"/>
+  <path d="M118 194 L176 118 L236 194" fill="none" stroke="url(#accent)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M118 194 L118 268 L236 268 L236 194" fill="none" stroke="#7f8d93" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="112" y="294" width="282" height="18" rx="9" fill="#f9f6f2" opacity="0.9"/>
+  <rect x="112" y="338" width="232" height="18" rx="9" fill="#f9f6f2" opacity="0.78"/>
+  <rect x="112" y="382" width="178" height="18" rx="9" fill="#f9f6f2" opacity="0.7"/>
+  <circle cx="374" cy="174" r="80" fill="#f9f6f2" opacity="0.88"/>
+  <path d="M334 174 L362 202 L416 146" fill="none" stroke="url(#accent)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
