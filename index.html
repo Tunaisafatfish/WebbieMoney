@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#a7b9af" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Finance Manager" />
+    <title>Personal Finance Manager</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div>
+          <p class="eyebrow">Overview</p>
+          <h1>Personal Finance</h1>
+        </div>
+
+        <nav class="nav">
+          <a class="section-link expense active" href="#expenses" data-target="expenses">Expense</a>
+          <a class="section-link accounts" href="#accounts" data-target="accounts">Accounts</a>
+          <a class="section-link investments" href="#investments" data-target="investments">Investment</a>
+          <a class="section-link income" href="#income" data-target="income">Income</a>
+          <a class="section-link reports" href="#reports" data-target="reports">Reports</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="expenses" class="panel active">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Overview</p>
+              <h2>Expense</h2>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-header compact">
+              <div>
+                <p class="eyebrow">Overview</p>
+                <h3>Monthly Spending Overview</h3>
+              </div>
+            </div>
+
+            <div class="two-column">
+              <div>
+                <div class="section-header compact">
+                  <div>
+                    <p class="eyebrow">Daily</p>
+                    <h3>Daily Expense Only</h3>
+                  </div>
+                </div>
+                <div id="daily-expense-summary" class="breakdown-list"></div>
+              </div>
+
+              <div>
+                <div class="section-header compact">
+                  <div>
+                    <p class="eyebrow">All</p>
+                    <h3>All Spending</h3>
+                  </div>
+                </div>
+                <div id="fixed-spending-summary" class="breakdown-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:20px;">
+            <div class="section-header compact">
+              <div>
+                <h3>Daily Expense</h3>
+              </div>
+            </div>
+
+            <form id="daily-expense-form" class="stacked-form">
+              <div class="field-row two">
+                <label>
+                  <span>Date</span>
+                  <input type="date" id="daily-expense-date" required />
+                </label>
+                <label>
+                  <span>Amount</span>
+                  <input type="number" id="daily-expense-amount" min="0.01" step="0.01" placeholder="0.00" required />
+                </label>
+              </div>
+
+              <div class="field-row two">
+                <label>
+                  <span>Category</span>
+                  <select id="daily-expense-category" required></select>
+                </label>
+                <label>
+                  <span>Account</span>
+                  <select id="daily-expense-account" required></select>
+                </label>
+              </div>
+
+              <label>
+                <span>Note</span>
+                <input type="text" id="daily-expense-note" placeholder="e.g. groceries" />
+              </label>
+
+              <button type="submit" class="action-button">Save Daily Expense</button>
+            </form>
+          </div>
+
+          <div class="card" style="margin-top:20px;">
+            <div class="section-header compact">
+              <div>
+                <p class="eyebrow">List</p>
+                <h3>Expense Entries</h3>
+              </div>
+            </div>
+            <div id="expense-entry-list" class="record-list"></div>
+          </div>
+
+          <div class="two-column" style="margin-top:20px;">
+            <div class="card">
+              <div class="section-header compact">
+                <div>
+                  <p class="eyebrow">Recurring</p>
+                  <h3>Recurring Spending</h3>
+                </div>
+              </div>
+
+              <form id="fixed-rule-form" class="stacked-form">
+                <div class="field-row two">
+                  <label>
+                    <span>Name</span>
+                    <input type="text" id="fixed-rule-name" placeholder="e.g. Rent" required />
+                  </label>
+                  <label>
+                    <span>Amount</span>
+                    <input type="number" id="fixed-rule-amount" min="0.01" step="0.01" placeholder="0.00" required />
+                  </label>
+                </div>
+
+                <div class="field-row two">
+                  <label>
+                    <span>Category</span>
+                    <select id="fixed-rule-category" required></select>
+                  </label>
+                  <label>
+                    <span>Cycle</span>
+                    <select id="fixed-rule-cycle">
+                      <option value="monthly">Monthly</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="yearly">Yearly</option>
+                    </select>
+                  </label>
+                </div>
+
+                <button type="submit" class="action-button">Add Recurring Rule</button>
+              </form>
+
+              <div class="section-header compact" style="margin-top:18px;">
+                <div>
+                  <p class="eyebrow">Summary</p>
+                  <h3>Total Recurring Spending</h3>
+                </div>
+                <strong id="recurring-spending-total">$0.00</strong>
+              </div>
+              <div id="recurring-spending-list" class="record-list"></div>
+            </div>
+
+            <div class="card">
+              <div class="section-header compact">
+                <div>
+                  <p class="eyebrow">Customize</p>
+                  <h3>Expense Categories</h3>
+                </div>
+              </div>
+
+              <form id="category-form" class="stacked-form">
+                <label>
+                  <span>Category Name</span>
+                  <input type="text" id="category-name" placeholder="e.g. Travel" required />
+                </label>
+                <button type="submit" class="action-button">Add Category</button>
+              </form>
+              <div id="expense-category-list" class="tag-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="accounts" class="panel">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Cash & Cards</p>
+              <h2>Bank Account Management</h2>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-header compact">
+              <div>
+                <h3>Balances</h3>
+              </div>
+            </div>
+            <form id="account-form" class="stacked-form">
+              <div class="field-row two">
+                <label>
+                  <span>Account Name</span>
+                  <input type="text" id="account-name" placeholder="e.g. Chase Checking" required />
+                </label>
+                <label>
+                  <span>Type</span>
+                  <select id="account-type">
+                    <option value="checking">Checking</option>
+                    <option value="savings">Savings</option>
+                    <option value="credit_card">Credit Card</option>
+                  </select>
+                </label>
+              </div>
+
+              <label>
+                <span>Starting Balance</span>
+                <input type="number" id="account-balance" min="0" step="0.01" value="0" />
+              </label>
+
+              <button type="submit" class="action-button">Add Account</button>
+            </form>
+            <div id="account-list" class="account-list" style="margin-top: 18px;"></div>
+          </div>
+        </section>
+
+        <section id="investments" class="panel">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Overview</p>
+              <h2>Investment</h2>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-header compact">
+              <div>
+                <h3>Record Investment Expense</h3>
+              </div>
+            </div>
+
+            <form id="investment-expense-form" class="stacked-form">
+              <div class="field-row two">
+                <label>
+                  <span>Date</span>
+                  <input type="date" id="investment-date" required />
+                </label>
+                <label>
+                  <span>Amount</span>
+                  <input type="number" id="investment-amount" min="0.01" step="0.01" placeholder="0.00" required />
+                </label>
+              </div>
+
+              <div class="field-row two">
+                <label>
+                  <span>Stock / Fund</span>
+                  <input type="text" id="investment-stock" placeholder="e.g. AAPL / VTI" required />
+                </label>
+                <label>
+                  <span>Investment Account / Project</span>
+                  <select id="investment-account" required></select>
+                </label>
+              </div>
+
+              <label>
+                <span>Note</span>
+                <input type="text" id="investment-note" placeholder="e.g. ETF purchase" />
+              </label>
+
+              <button type="submit" class="action-button">Save Investment Expense</button>
+            </form>
+          </div>
+
+          <div class="two-column" style="margin-top:20px;">
+            <div class="card">
+              <div class="section-header compact">
+                <div>
+                  <p class="eyebrow">Customize</p>
+                  <h3>Investment Accounts</h3>
+                </div>
+              </div>
+
+              <form id="investment-account-form" class="stacked-form">
+                <label>
+                  <span>Account / Project Name</span>
+                  <input type="text" id="investment-account-name" placeholder="e.g. Brokerage - QQQ" required />
+                </label>
+                <button type="submit" class="action-button">Add Account</button>
+              </form>
+              <div id="investment-account-list" class="tag-list"></div>
+            </div>
+
+            <div class="card">
+              <div class="section-header compact">
+                <div>
+                  <p class="eyebrow">Return</p>
+                  <h3>Investment Return</h3>
+                </div>
+              </div>
+
+              <form id="investment-return-form" class="stacked-form">
+                <div class="field-row two">
+                  <label>
+                    <span>Date</span>
+                    <input type="date" id="investment-return-date" required />
+                  </label>
+                  <label>
+                    <span>Return Amount</span>
+                    <input type="number" id="investment-return-amount" min="0.01" step="0.01" placeholder="0.00" required />
+                  </label>
+                </div>
+
+                <div class="field-row two">
+                  <label>
+                    <span>Stock / Fund</span>
+                    <input type="text" id="investment-return-stock" placeholder="e.g. AAPL" required />
+                  </label>
+                  <label>
+                    <span>Account / Project</span>
+                    <select id="investment-return-account" required></select>
+                  </label>
+                </div>
+
+                <label>
+                  <span>Note</span>
+                  <input type="text" id="investment-return-note" placeholder="e.g. dividend" />
+                </label>
+
+                <button type="submit" class="action-button">Save Return</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:20px;">
+            <div class="section-header compact">
+              <div>
+                <p class="eyebrow">Compare</p>
+                <h3>Return Recovery Rate</h3>
+              </div>
+            </div>
+            <div id="investment-compare" class="breakdown-list"></div>
+          </div>
+
+          <div class="card" style="margin-top:20px;">
+            <div class="section-header compact">
+              <div>
+                <p class="eyebrow">Overview</p>
+                <h3>Investment Spending</h3>
+              </div>
+            </div>
+            <div id="investment-expense-list" class="record-list"></div>
+          </div>
+
+          <div class="card" style="margin-top:20px;">
+            <div class="section-header compact">
+              <div>
+                <p class="eyebrow">Overview</p>
+                <h3>Investment Returns</h3>
+              </div>
+            </div>
+            <div id="investment-return-list" class="record-list"></div>
+          </div>
+        </section>
+
+        <section id="income" class="panel">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Overview</p>
+              <h2>Income</h2>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-header compact">
+              <div>
+                <p class="eyebrow">Add</p>
+                <h3>Record Income</h3>
+              </div>
+            </div>
+
+            <form id="monthly-income-form" class="stacked-form">
+              <div class="field-row two">
+                <label>
+                  <span>Month</span>
+                  <input type="month" id="monthly-income-month" required />
+                </label>
+                <label>
+                  <span>Amount</span>
+                  <input type="number" id="monthly-income-amount" min="0.01" step="0.01" placeholder="0.00" required />
+                </label>
+              </div>
+
+              <div class="field-row two">
+                <label>
+                  <span>Category</span>
+                  <select id="monthly-income-category" required></select>
+                </label>
+                <label>
+                  <span>Account</span>
+                  <select id="monthly-income-account" required></select>
+                </label>
+              </div>
+
+              <label>
+                <span>Note</span>
+                <input type="text" id="monthly-income-note" placeholder="e.g. paycheck" />
+              </label>
+
+              <button type="submit" class="action-button">Save Income</button>
+            </form>
+          </div>
+
+          <div class="card" style="margin-top:20px;">
+            <div class="section-header compact">
+              <div>
+                <p class="eyebrow">Analysis</p>
+                <h3>Monthly Income By Category</h3>
+              </div>
+            </div>
+            <div id="income-breakdown-chart" class="breakdown-list"></div>
+          </div>
+
+          <div class="card" style="margin-top:20px;">
+            <div class="section-header compact">
+              <div>
+                <p class="eyebrow">List</p>
+                <h3>Income Entries</h3>
+              </div>
+            </div>
+            <div id="income-entry-list" class="record-list"></div>
+          </div>
+
+          <div class="card" style="margin-top:20px;">
+            <div class="section-header compact">
+              <div>
+                <p class="eyebrow">Customize</p>
+                <h3>Income Categories</h3>
+              </div>
+            </div>
+
+            <form id="income-category-form" class="stacked-form">
+              <label>
+                <span>Income Category Name</span>
+                <input type="text" id="income-category-name" placeholder="e.g. Salary" required />
+              </label>
+              <button type="submit" class="action-button">Add Income Category</button>
+            </form>
+            <div id="income-category-list" class="tag-list"></div>
+          </div>
+        </section>
+
+        <section id="reports" class="panel">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Analysis</p>
+              <h2>Yearly Spending & Income</h2>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:20px;">
+            <div class="section-header compact">
+              <div>
+                <p class="eyebrow">Compare</p>
+                <h3>Expense Vs Income Percentage</h3>
+              </div>
+            </div>
+            <div id="expense-income-compare" class="breakdown-list"></div>
+          </div>
+
+          <div class="yearly-report-list" id="yearly-report-list"></div>
+
+          <div class="reset-data-bar">
+            <button class="action-button secondary danger" id="reset-demo">Clear All Data</button>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <div class="reset-confirm-modal hidden" id="clear-data-modal" aria-modal="true" role="dialog">
+      <div class="reset-confirm-card">
+        <p class="eyebrow">Warning</p>
+        <h3>Delete all data?</h3>
+        <p>This will permanently remove all accounts, categories, records, and investments from this app.</p>
+        <div class="confirm-actions">
+          <button type="button" class="action-button secondary" id="cancel-clear-data">Cancel</button>
+          <button type="button" class="action-button danger" id="confirm-clear-data">Yes, delete</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reset-confirm-modal hidden" id="account-delete-modal" aria-modal="true" role="dialog">
+      <div class="reset-confirm-card">
+        <p class="eyebrow">Warning</p>
+        <h3>Delete this account?</h3>
+        <p>This will remove the account and keep the records but mark the linked account name as deleted.</p>
+        <div class="confirm-actions">
+          <button type="button" class="action-button secondary" id="cancel-account-delete">Cancel</button>
+          <button type="button" class="action-button danger" id="confirm-account-delete">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reset-confirm-modal hidden" id="expense-delete-modal" aria-modal="true" role="dialog">
+      <div class="reset-confirm-card">
+        <p class="eyebrow">Warning</p>
+        <h3>Delete this spending item?</h3>
+        <p>This removes the selected expense from the current month records.</p>
+        <div class="confirm-actions">
+          <button type="button" class="action-button secondary" id="cancel-expense-delete">Cancel</button>
+          <button type="button" class="action-button danger" id="confirm-expense-delete">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reset-confirm-modal hidden" id="recurring-delete-modal" aria-modal="true" role="dialog">
+      <div class="reset-confirm-card">
+        <p class="eyebrow">Warning</p>
+        <h3>Delete this recurring spending?</h3>
+        <p>This removes the recurring rule from your monthly spending summary.</p>
+        <div class="confirm-actions">
+          <button type="button" class="action-button secondary" id="cancel-recurring-delete">Cancel</button>
+          <button type="button" class="action-button danger" id="confirm-recurring-delete">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reset-confirm-modal hidden" id="income-delete-modal" aria-modal="true" role="dialog">
+      <div class="reset-confirm-card">
+        <p class="eyebrow">Warning</p>
+        <h3>Delete this income entry?</h3>
+        <p>This removes the selected income record and updates the linked account balance.</p>
+        <div class="confirm-actions">
+          <button type="button" class="action-button secondary" id="cancel-income-delete">Cancel</button>
+          <button type="button" class="action-button danger" id="confirm-income-delete">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
